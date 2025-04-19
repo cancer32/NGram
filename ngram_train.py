@@ -12,7 +12,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_path', required=True, type=str, help='Path to the dataset')
     parser.add_argument('--checkpoint_path', required=True, type=str, help='Path to save the model weights')
-    parser.add_argument('--n_gram', type=int, default=4, help='N-gram size')
+    parser.add_argument('--batch', type=int, default=4, help='N-gram size')
     parser.add_argument('--seed', type=int, default=random.randint(0, 999999), help='Random seed')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs for training')
     parser.add_argument('--lr', type=float, default=10, help='Learning rate')
@@ -31,10 +31,13 @@ if __name__ == '__main__':
     y_train = []
 
     for name in names:
-        name = '.' * (args.n_gram - 1) + '%s.' % name
-        for chars in zip(name, *[name[i+1:] for i in range(args.n_gram-1)]):
-            x_train.append([stoi[i] for i in chars[:-1]])
-            y_train.append(stoi[chars[-1]])
+        context = [0] * args.batch
+        for ch in name + '.':
+            ch = stoi[ch]
+            x_train.append(list(context))
+            y_train.append(ch)
+            context.append(ch)
+            context = context[1:]
 
     x_train = torch.tensor(x_train)
     y_train = torch.tensor(y_train)
@@ -47,7 +50,7 @@ if __name__ == '__main__':
     g = torch.Generator().manual_seed(args.seed)
     model = NGramModel(
         vocab_size=vocab_size,
-        n_gram=args.n_gram,
+        batch_size=args.batch,
         generator=g
     )
     if os.path.exists(args.checkpoint_path):
@@ -69,6 +72,6 @@ if __name__ == '__main__':
     torch.save({
         'model_state_dict': model.state_dict(),
         'vocab_size': model.vocab_size,
-        'n_gram': model.n_gram,
+        'batch_size': model.batch_size,
         'itos': itos
     }, args.checkpoint_path)

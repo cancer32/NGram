@@ -3,12 +3,12 @@ import torch.nn as nn
 
 
 class NGramModel(nn.Module):
-    def __init__(self, vocab_size, n_gram, generator=None):
+    def __init__(self, vocab_size, batch_size, generator=None):
         super().__init__()
         self.vocab_size = vocab_size
-        self.n_gram = n_gram
+        self.batch_size = batch_size
         self.linear = nn.Linear(
-            vocab_size * (n_gram-1),
+            vocab_size * batch_size,
             vocab_size,
             bias=False
         )

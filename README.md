@@ -36,13 +36,13 @@ To use the Ngram model, you will need Python 3.x and several dependencies. It is
 To train the model, run the `ngram_train.py` script with the required arguments.
 
 ```bash
-python ngram_train.py --dataset_path 'dataset/names.txt' --checkpoint_path 'weights/names.pt' [--n_gram <n>] [--seed <random_seed>] [--epochs <epochs>] [--lr <learning_rate>]
+python ngram_train.py --dataset_path 'dataset/names.txt' --checkpoint_path 'weights/names.pt' [--batch <n>] [--seed <random_seed>] [--epochs <epochs>] [--lr <learning_rate>]
 ```
 
 **Arguments:**
 - `--dataset_path`: The path to the text dataset for training (required).
 - `--checkpoint_path`: The directory to save the trained model weights (required).
-- `--n_gram`: The N-gram size (default is 4).
+- `--batch`: The N-gram size (default is 4).
 - `--seed`: Random seed for reproducibility (default is random).
 - `--epochs`: The number of epochs for training (default is 100).
 - `--lr`: The learning rate for training (default is 10).

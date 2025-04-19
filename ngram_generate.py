@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     model = NGramModel(
         vocab_size=checkpoint['vocab_size'],
-        n_gram=checkpoint['n_gram'],
+        batch_size=checkpoint['batch_size'],
         generator=g,
     )
     model.load_state_dict(checkpoint['model_state_dict'])
@@ -30,11 +30,11 @@ if __name__ == '__main__':
 
     with torch.no_grad():
         for i in range(args.count):
-            out = '.' * (model.n_gram-1)
+            out = '.' * model.batch_size
             if args.start:
-                out = '.' * max((model.n_gram-len(args.start)-1, 0)) + args.start
+                out = '.' * max((model.batch_size-len(args.start), 0)) + args.start
             out = [stoi[i] for i in out]
-            idx = out[-model.n_gram+1:]
+            idx = out[-model.batch_size:]
             while True:
                 xenc = nn.functional.one_hot(
                     torch.tensor(idx),
